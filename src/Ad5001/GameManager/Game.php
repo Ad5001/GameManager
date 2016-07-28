@@ -22,6 +22,7 @@ abstract class Game {
        $this->level = $level;
        $this->name = $name;
        $this->main = $this->server->getPlugin("GameManager");
+       $this->main->backup($level);
    }
 
 
@@ -43,7 +44,13 @@ abstract class Game {
    public function onGameStart();
 
 
-   public function stopGame();
+   public function onGameStop();
+
+
+   public function stopGame() {
+       $this->main->getGameManager()->reloadLevel($this->level);
+       return true;
+   }
 
 
    public function onJoin(Player $player) {}
@@ -80,6 +87,10 @@ abstract class Game {
 
    public function useEvent(\pocketmine\event\Event $event) : bool;
 
+
+   public function getDataFolder() {
+       return $this->main->getDataFolder() . "games/$this->name";
+   }
 
 
 }
