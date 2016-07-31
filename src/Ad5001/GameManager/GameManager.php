@@ -22,7 +22,7 @@ class GameManager {
    public function __construct(Main $main) {
         $this->main = $main;
         $this->server = $main->getServer();
-        $files = array_diff(scandir($this->getDataFolder() . "/games"), [".", ".."]);
+        $files = array_diff(scandir($main->getDataFolder() . "games"), [".", ".."]);
         $this->games = [];
         $this->levels = [];
         $this->startedgames = [];

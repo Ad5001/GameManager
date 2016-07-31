@@ -61,6 +61,9 @@ abstract class Game {
    public function onQuit(Player $player) {}
 
 
+   public function onInteract(\pocketmine\event\player\PlayerInteract $event) {}
+
+
    public function onBlockBreak(\pocketmine\event\block\BlockBreakEvent $event) {}
 
 

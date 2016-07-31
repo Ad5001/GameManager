@@ -6,6 +6,7 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\plugin\PluginBase;
 use pocketmine\Server;
+use pocketmine\level\Level;
 use pocketmine\Player;
 use Ad5001\GameManager\GameManager;
 
@@ -20,7 +21,13 @@ class Main extends PluginBase implements Listener {
         $this->reloadConfig();
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         @mkdir($this->getServer()->getFilePath() . "worldsBackups/");
+        @mkdir($this->getDataFolder() . "games");
         $this->manager = new GameManager($this);
+        foreach(array_diff_key($this->getConfig()->getAll(), ["Game1" => "", "Game2" => "", "InGame3" => "", "InGame4" => "", "GameWait3" => "", "GameWait4" => ""]) as $worldname => $gamename) {
+            if($this->getServer()->getLevelByName($worldname) instanceof Level) {
+                $this->manager->registerLevel($this->getServer()->getLevelByName($worldname), $gamename);
+            }
+        }
    }
 
 
@@ -32,7 +39,7 @@ class Main extends PluginBase implements Listener {
                            $lvl = str_ireplace($lvlex[0], "", $t->getText()[1]); 
                            $lvl = str_ireplace($lvlex[1], "", $lvl);
                            if($name == $lvl) {
-                               if($this->gameManager->getLevels()[$lvl->getName()]->isStarted()) {
+                               if($this->manager->getLevels()[$lvl->getName()]->isStarted()) {
                                    $event->getPlayer()->teleport($lvl->getDefaultSpawn());
                                    $event->getPlayer()->setGamemode(3);
                                } else {
