@@ -5,8 +5,7 @@ I made this for me at start but feel free to use it to write your own minigame !
 ### How to make a game:     
 To make a game base, create a new file called "<YOUR_GAME_NAME>.php". Inside it, add a 
 
-``
-<?php
+``<?php
 
 use Ad5001\GameManager\Game;
 use pocketmine\Player;
@@ -23,16 +22,17 @@ public function onGameStop() { // When you stop the game.
 }
 
 
-public function getName() : string {
-return "<YOUR_GAME_NAME>";
-}
-
+public function getName() : string {    
+return "<YOUR_GAME_NAME>";   
+}   
+   
 
 public function getMaxPlayers() : int { // Return the max of the players
 return <NUMBER OF PLAYERS MAX>;
 }
 
 
-// Write in progress :)
-}
+// Write in progress :)   
+}   
+
 ``
