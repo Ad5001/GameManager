@@ -12,9 +12,13 @@ use Ad5001\GameManager\GameManager;
 class Main extends PluginBase{
 
 
+    protected $manager;
+
+
    public function onEnable(){
         $this->reloadConfig();
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
+        @mkdir($this->getServer()->getFilePath() . "worldsBackups/");
         $this->manager = new GameManager($this);
 
    }
@@ -22,6 +26,11 @@ class Main extends PluginBase{
 
     public function onLoad(){
         $this->saveDefaultConfig();
+    }
+
+
+    public function getGameManager() {
+        return $this->manager;
     }
 
 

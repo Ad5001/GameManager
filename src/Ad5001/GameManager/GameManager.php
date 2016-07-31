@@ -12,6 +12,13 @@ use Ad5001\GameManager\Main;
 class GameManager {
 
 
+    protected $main;
+    protected $server;
+    protected $games;
+    protected $levels;
+    protected $startedgames;
+
+
    public function __construct(Main $main) {
         $this->main = $main;
         $this->server = $main->getServer();
@@ -20,10 +27,10 @@ class GameManager {
         $this->levels = [];
         $this->startedgames = [];
         foreach ($files as $file) {
-            require($file);
+            require($this->getDataFolder() . "/games/" . $file);
             $classn = getClasses(file_get_contents($this->getDataFolder() . "/games/" . $file));
             $this->games[explode(".php", $file)[0]] = $classn;
-            @mkdir($this->main->getDataFolder() . "games/$classn");
+            @mkdir($this->main->getDataFolder() . "games/" . explode(".php", $file)[0]);
         }
     }
 
@@ -51,12 +58,33 @@ class GameManager {
     }
 
 
-
-    public function reloadLevel(Level $level) {
-        $this->backup($level);
-        rrmdir($this->main->getFilePath() . "worlds/{$level->getName()}");
-        $this->restore($level);
+    public function getLevels() {
+        return $this->levels;
     }
+
+
+    public function getGames() {
+        return $this->games;
+    }
+
+
+    public function getStartedGames() {
+        return $this->startedgames;
+    }
+
+
+
+    public function restoreBackup(Level $level) {
+        rrmdir($this->server->getFilePath() . "worlds/{$level->getName()}");
+        copydir($this->server->getFilePath() . "worldsBackups/{$level->getName()}", $this->server->getFilePath() . "worlds/{$level->getName()}");
+    }
+
+
+
+   public function backup(Level $level) {
+        rrmdir($this->server->getFilePath() . "worldsBackups/{$level->getName()}");
+        copydir($this->server->getFilePath() . "worlds/{$level->getName()}", $this->server->getFilePath() . "worldsBackup/{$level->getName()}");
+   } 
 
 
     private function rrmdir($dir) { // This is from PHP.NET
@@ -74,24 +102,24 @@ class GameManager {
     
     
     private function copydir( $source, $target ) {
-    if ( is_dir( $source ) ) {
-        @mkdir( $target );
-        $d = dir( $source );
+    if (is_dir( $source)) {
+        @mkdir($target);
+        $d = dir($source);
         while ( FALSE !== ( $entry = $d->read() ) ) {
-            if ( $entry == '.' || $entry == '..' ) {
+            if ($entry == '.' || $entry == '..') {
                 continue;
             }
             $Entry = $source . '/' . $entry; 
-            if ( is_dir( $Entry ) ) {
-                full_copy( $Entry, $target . '/' . $entry );
+            if (is_dir($Entry)) {
+                copydir($Entry, $target . '/' . $entry);
                 continue;
             }
-            copy( $Entry, $target . '/' . $entry );
+            copy($Entry, $target . '/' . $entry);
         }
 
         $d->close();
     } else {
-        copy( $source, $target );
+        copy($source, $target);
     }
     }
 

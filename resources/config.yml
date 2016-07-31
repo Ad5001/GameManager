@@ -1,3 +1,21 @@
 ---
-# This is the default config generated with ImagicalPlugCreator. (C) ImagicalPlugCreator - Ad5001 2016
+# Welcome to GameManager config.
+# Here you can configure how does game signs looks.
+# 1 is line 1, 2 is line 2, 3 is line 3 and 4 is line 4. 
+# Note that {Game} MUST be included in the first line and {level} in the second one (detection).
+
+Game1: "§l§o[§r§l{Game}§o]"
+Game2: "-=<{level}>=-"
+
+# When the game need more players:
+GameWait3: "{players}/{max}"
+GameWait4: "> > > CLICK TO JOIN < < <"
+
+# When the game is already started:
+InGame3: "Game already started"
+InGame4: "> > > CLICK TO SPECTATE < < <"
+
+#  Now you can choose all worlds game's
+#  Example:
+#world: NameOfTheGame
 ...

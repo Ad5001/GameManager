@@ -15,6 +15,7 @@ abstract class Game {
 
     protected $name;
     protected $level;
+    protected $server;
 
 
    public function __construct(string $name, Level $level) {
@@ -22,6 +23,7 @@ abstract class Game {
        $this->level = $level;
        $this->name = $name;
        $this->main = $this->server->getPlugin("GameManager");
+       $this->gm = $this->main->getGameManager();
        $this->main->backup($level);
    }
 
@@ -36,8 +38,8 @@ abstract class Game {
    }
 
 
-   public function getLevel() {
-       return $this->main;
+   public function isStarted() {
+       return isset($this->gm->getStartedGames()[$this->level->getName()]);
    }
 
 
