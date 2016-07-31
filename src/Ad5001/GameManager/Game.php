@@ -24,7 +24,7 @@ abstract class Game {
        $this->name = $name;
        $this->main = $this->server->getPlugin("GameManager");
        $this->gm = $this->main->getGameManager();
-       $this->main->backup($level);
+       $this->gm->backup($level);
    }
 
 
@@ -43,22 +43,33 @@ abstract class Game {
    }
 
 
-   public function onGameStart();
+   abstract public function onGameStart();
 
 
-   public function onGameStop();
+   abstract public function onGameStop();
 
 
-   public function stopGame() {
-       $this->main->getGameManager()->reloadLevel($this->level);
+   public function stop() {
+       $this->gm->stopGame($this->level);
        return true;
    }
 
 
-   public function onJoin(Player $player) {}
+   public function onJoin(Player $player) {
+       if($this->getLevel()->getPlayers() >= $this->getMinPlayers() and !$this->isStarted()) {
+           $this->gm->startGame($this->getLevel());
+       }
+       if($this->getLevel()->getPlayers() <= $this->getMaxPlayers()) {
+           $player->teleport($this->getServer()->getDefaultLevel()->getDefaultSpawn());
+       }
+   }
 
 
-   public function onQuit(Player $player) {}
+   public function onQuit(Player $player) {
+       if($this->getLevel()->getPlayers() <= $this->getMinPlayers()) {
+           $this->gm->stopGame($this->getLevel());
+       }
+   }
 
 
    public function onInteract(\pocketmine\event\player\PlayerInteract $event) {}
@@ -79,21 +90,19 @@ abstract class Game {
 
 
    public function saveDefaultConfig() {
+       @mkdir($this->main->getDataFolder() . "games/" . $this->name);
        file_put_contents($this->main->getDataFolder() . "games/$this->name", "");
    }
 
 
 
-   public function getName() : string;
+   abstract public function getName() : string;
 
 
-   public function getMinPlayers() : int;
+   abstract public function getMinPlayers() : int;
 
 
-   public function getMaxPlayers() : int;
-
-
-   public function useEvent(\pocketmine\event\Event $event) : bool;
+   abstract public function getMaxPlayers() : int;
 
 
    public function getDataFolder() {

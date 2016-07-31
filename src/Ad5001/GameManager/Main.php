@@ -7,8 +7,10 @@ use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\plugin\PluginBase;
 use pocketmine\Server;
 use pocketmine\level\Level;
+use pocketmine\block\Block;
 use pocketmine\Player;
 use Ad5001\GameManager\GameManager;
+use Ad5001\GameManager\tasks\SignReloadTask;
 
 
 class Main extends PluginBase implements Listener {
@@ -23,6 +25,7 @@ class Main extends PluginBase implements Listener {
         @mkdir($this->getServer()->getFilePath() . "worldsBackups/");
         @mkdir($this->getDataFolder() . "games");
         $this->manager = new GameManager($this);
+        $this->getServer()->getScheduler()->scheduleRepeatingTask(new SignReloadTask($this), 5);
         foreach(array_diff_key($this->getConfig()->getAll(), ["Game1" => "", "Game2" => "", "InGame3" => "", "InGame4" => "", "GameWait3" => "", "GameWait4" => ""]) as $worldname => $gamename) {
             if($this->getServer()->getLevelByName($worldname) instanceof Level) {
                 $this->manager->registerLevel($this->getServer()->getLevelByName($worldname), $gamename);
@@ -32,8 +35,10 @@ class Main extends PluginBase implements Listener {
 
 
    public function onInteract(PlayerInteractEvent $event) {
-       if($event->getBlock() instanceof \pocketmine\block\SignPost and $event->getBlock() instanceof \pocketmine\block\WallSign) {
-           $t = $event->getBlock()->getLevel()->getTile($block);
+    //    echo "Interacted";
+       if($event->getBlock()->getId() == Block::SIGN_POST  and $event->getBlock()->getId() == Block::WALL_SIGN) {
+           $t = $event->getBlock()->getLevel()->getTile($event->getBlock());
+           echo "Sign.";
            if(str_ireplace("{game}", $class->getName(), $this->getConfig()->get("Game1")) == $t->getText()[0]) {
                            $lvlex = explode("{level}", $this->getConfig()->get("Game2"));
                            $lvl = str_ireplace($lvlex[0], "", $t->getText()[1]); 
@@ -72,7 +77,7 @@ class Main extends PluginBase implements Listener {
 
 
     public function getClasses(string $file) {
-        $tokens = token_get_all($php_file);
+        $tokens = token_get_all($file);
         $class_token = false;
         foreach ($tokens as $token) {
             if (is_array($token)) {

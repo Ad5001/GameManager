@@ -27,10 +27,12 @@ class GameManager {
         $this->levels = [];
         $this->startedgames = [];
         foreach ($files as $file) {
-            require($this->getDataFolder() . "/games/" . $file);
-            $classn = getClasses(file_get_contents($this->getDataFolder() . "/games/" . $file));
-            $this->games[explode(".php", $file)[0]] = $classn;
-            @mkdir($this->main->getDataFolder() . "games/" . explode(".php", $file)[0]);
+            if(!is_dir($this->main->getDataFolder() . "/games/" . $file)) {
+                require($this->main->getDataFolder() . "/games/" . $file);
+                $classn = $this->main->getClasses(file_get_contents($this->main->getDataFolder() . "/games/" . $file));
+                $this->games[explode(".php", $file)[0]] = $classn;
+                @mkdir($this->main->getDataFolder() . "games/" . explode(".php", $file)[0]);
+            }
         }
     }
 
@@ -40,6 +42,17 @@ class GameManager {
         if(isset($this->levels[$level->getName()]) and !isset($this->startedgames[$level->getName()])) {
             $this->startedgames[$level->getName()] = true;
             $this->levels[$level->getName()]->onGameStart();
+            return true;
+        }
+        return false;
+    }
+
+
+
+    public function stopGame(Level $level) {
+        if(isset($this->startedgames[$level->getName()])) {
+            unset($this->startedgames[$level->getName()]);
+            $this->levels[$level->getName()]->onGameStop();
             return true;
         }
         return false;

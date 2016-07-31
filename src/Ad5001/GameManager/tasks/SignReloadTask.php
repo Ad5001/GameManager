@@ -1,5 +1,5 @@
 <?php
-namespace Ad5001\GameManager;
+namespace Ad5001\GameManager\tasks;
 use pocketmine\scheduler\PluginTask;
 use pocketmine\Server;
 use pocketmine\Player;
@@ -24,14 +24,16 @@ class SignReloadTask extends PluginTask {
 
 
    public function onRun($tick) {
+    //    echo "Running...";
        foreach($this->server->getLevels() as $level) {
            foreach($level->getTiles() as $t) {
                if($t instanceof \pocketmine\tile\Sign) {
                    foreach($this->gameManager->getLevels() as $name => $class) {
+                       echo $class->getLevel()->getName();
                        if($t->getText()[0] == "[GAME]" and $class->getLevel()->getName() == $t->getText()[1]) {
                            $texts = $t->getText();
                            foreach($texts as $key => $text) {
-                               $texts[$key] = str_ireplace("{players}", count($class->getLevel()->getPlayers()), str_ireplace("{max}", $class->getMaxPlayers(), str_ireplace("{game}", $class->getName(), str_ireplace("{level}", $class->getLevel()->getName(), ))))
+                               $texts[$key] = str_ireplace("{players}", count($class->getLevel()->getPlayers()), str_ireplace("{max}", $class->getMaxPlayers(), str_ireplace("{game}", $class->getName(), str_ireplace("{level}", $class->getLevel()->getName(), $text))));
                            }
                            $t->setText($texts[0], $texts[1], $texts[2], $texts[3]);
                        }
