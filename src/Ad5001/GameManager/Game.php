@@ -61,10 +61,13 @@ abstract class Game {
    public function onQuit(Player $player) {}
 
 
-   public function onBlockBreak(Player $player, Block $block) {}
+   public function onBlockBreak(\pocketmine\event\block\BlockBreakEvent $event) {}
 
 
-   public function onBlockPlace(Player $player, Block $block) {}
+   public function onBlockPlace(\pocketmine\event\entity\EntityDamageEvent $event) {}
+
+
+   public function onEntityDamage(\pocketmine\event\entity\EntityDamageEvent $event) {}
 
 
    public function getConfig() {
@@ -73,7 +76,7 @@ abstract class Game {
 
 
    public function saveDefaultConfig() {
-       $this->main->saveResource("/games/$this->name/config.yml");
+       file_put_contents($this->main->getDataFolder() . "games/$this->name", "");
    }
 
 

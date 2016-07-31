@@ -28,6 +28,13 @@ class SignReloadTask extends PluginTask {
            foreach($level->getTiles() as $t) {
                if($t instanceof \pocketmine\tile\Sign) {
                    foreach($this->gameManager->getLevels() as $name => $class) {
+                       if($t->getText()[0] == "[GAME]" and $class->getLevel()->getName() == $t->getText()[1]) {
+                           $texts = $t->getText();
+                           foreach($texts as $key => $text) {
+                               $texts[$key] = str_ireplace("{players}", count($class->getLevel()->getPlayers()), str_ireplace("{max}", $class->getMaxPlayers(), str_ireplace("{game}", $class->getName(), str_ireplace("{level}", $class->getLevel()->getName(), ))))
+                           }
+                           $t->setText($texts[0], $texts[1], $texts[2], $texts[3]);
+                       }
                        if(str_ireplace("{game}", $class->getName(), $this->cfg->get("Game1")) == $t->getText()[0]) {
                            $lvlex = explode("{level}", $this->cfg->get("Game2"));
                            $lvl = str_ireplace($lvlex[0], "", $t->getText()[1]); 

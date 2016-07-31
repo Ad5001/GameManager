@@ -3,13 +3,14 @@ namespace Ad5001\GameManager;
 use pocketmine\command\CommandSender;
 use pocketmine\command\Command;
 use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\plugin\PluginBase;
 use pocketmine\Server;
 use pocketmine\Player;
 use Ad5001\GameManager\GameManager;
 
 
-class Main extends PluginBase{
+class Main extends PluginBase implements Listener {
 
 
     protected $manager;
@@ -20,7 +21,27 @@ class Main extends PluginBase{
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         @mkdir($this->getServer()->getFilePath() . "worldsBackups/");
         $this->manager = new GameManager($this);
+   }
 
+
+   public function onInteract(PlayerInteractEvent $event) {
+       if($event->getBlock() instanceof \pocketmine\block\SignPost and $event->getBlock() instanceof \pocketmine\block\WallSign) {
+           $t = $event->getBlock()->getLevel()->getTile($block);
+           if(str_ireplace("{game}", $class->getName(), $this->getConfig()->get("Game1")) == $t->getText()[0]) {
+                           $lvlex = explode("{level}", $this->getConfig()->get("Game2"));
+                           $lvl = str_ireplace($lvlex[0], "", $t->getText()[1]); 
+                           $lvl = str_ireplace($lvlex[1], "", $lvl);
+                           if($name == $lvl) {
+                               if($this->gameManager->getLevels()[$lvl->getName()]->isStarted()) {
+                                   $event->getPlayer()->teleport($lvl->getDefaultSpawn());
+                                   $event->getPlayer()->setGamemode(3);
+                               } else {
+                                   $event->getPlayer()->teleport($lvl->getDefaultSpawn());
+                                   $this->gameManager->getLevels()[$lvl->getName()]->onJoin($event->getPlayer());
+                               }
+                           }
+           }
+       }
    }
 
 
