@@ -35,11 +35,12 @@ class Main extends PluginBase implements Listener {
 
 
    public function onInteract(PlayerInteractEvent $event) {
-    //    echo "Interacted";
-       if($event->getBlock()->getId() == Block::SIGN_POST  and $event->getBlock()->getId() == Block::WALL_SIGN) {
+       echo $event->getBlock()->getId() . "=/=" . Block::SIGN_POST ."=/=" . Block::WALL_SIGN;
+       if($event->getBlock()->getId() == Block::SIGN_POST or $event->getBlock()->getId() == Block::WALL_SIGN) {
            $t = $event->getBlock()->getLevel()->getTile($event->getBlock());
            echo "Sign.";
-           if(str_ireplace("{game}", $class->getName(), $this->getConfig()->get("Game1")) == $t->getText()[0]) {
+           foreach($this->manager->getLevels() as $class) {
+                  if(str_ireplace("{game}", $class->getName(), $this->getConfig()->get("Game1")) == $t->getText()[0]) {
                            $lvlex = explode("{level}", $this->getConfig()->get("Game2"));
                            $lvl = str_ireplace($lvlex[0], "", $t->getText()[1]); 
                            $lvl = str_ireplace($lvlex[1], "", $lvl);
@@ -52,6 +53,7 @@ class Main extends PluginBase implements Listener {
                                    $this->gameManager->getLevels()[$lvl->getName()]->onJoin($event->getPlayer());
                                }
                            }
+                  }
            }
        }
    }

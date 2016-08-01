@@ -63,7 +63,7 @@ class GameManager {
     public function registerLevel(Level $level, string $game) {
         if(!array_key_exists($level->getName(), $this->levels)) {
             if(isset($this->games[$game])) {
-                $this->levels[$level->getName()] = new $this->games[$game]($level);
+                $this->levels[$level->getName()] = new $this->games[$game]($game, $level);
             } else {
                 $this->main->getLogger()->warn("No game found with name $game");
             }
@@ -88,15 +88,15 @@ class GameManager {
 
 
     public function restoreBackup(Level $level) {
-        rrmdir($this->server->getFilePath() . "worlds/{$level->getName()}");
-        copydir($this->server->getFilePath() . "worldsBackups/{$level->getName()}", $this->server->getFilePath() . "worlds/{$level->getName()}");
+        $this->rrmdir($this->server->getFilePath() . "worlds/{$level->getName()}");
+        $this->copydir($this->server->getFilePath() . "worldsBackups/{$level->getName()}", $this->server->getFilePath() . "worlds/{$level->getName()}");
     }
 
 
 
    public function backup(Level $level) {
-        rrmdir($this->server->getFilePath() . "worldsBackups/{$level->getName()}");
-        copydir($this->server->getFilePath() . "worlds/{$level->getName()}", $this->server->getFilePath() . "worldsBackup/{$level->getName()}");
+        $this->rrmdir($this->server->getFilePath() . "worldsBackups/{$level->getName()}");
+        $this->copydir($this->server->getFilePath() . "worlds/{$level->getName()}", $this->server->getFilePath() . "worldsBackup/{$level->getName()}");
    } 
 
 

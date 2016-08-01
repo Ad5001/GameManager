@@ -28,6 +28,7 @@ class SignReloadTask extends PluginTask {
        foreach($this->server->getLevels() as $level) {
            foreach($level->getTiles() as $t) {
                if($t instanceof \pocketmine\tile\Sign) {
+                //    echo "Sign.";
                    foreach($this->gameManager->getLevels() as $name => $class) {
                        echo $class->getLevel()->getName();
                        if($t->getText()[0] == "[GAME]" and $class->getLevel()->getName() == $t->getText()[1]) {

@@ -5,6 +5,7 @@ use pocketmine\Server;
 use pocketmine\Player;
 use pocketmine\block\Block;
 use pocketmine\utils\Config;
+use pocketmine\level\Level;
 
 use Ad5001\GameManager\Main;
 
@@ -22,7 +23,7 @@ abstract class Game {
        $this->server = $level->getServer();
        $this->level = $level;
        $this->name = $name;
-       $this->main = $this->server->getPlugin("GameManager");
+       $this->main = $this->server->getPluginManager()->getPlugin("GameManager");
        $this->gm = $this->main->getGameManager();
        $this->gm->backup($level);
    }
@@ -59,7 +60,7 @@ abstract class Game {
        if($this->getLevel()->getPlayers() >= $this->getMinPlayers() and !$this->isStarted()) {
            $this->gm->startGame($this->getLevel());
        }
-       if($this->getLevel()->getPlayers() <= $this->getMaxPlayers()) {
+       if($this->getLevel()->getPlayers() <= $this->getMaxPlayers() and !$this->isStarted()) {
            $player->teleport($this->getServer()->getDefaultLevel()->getDefaultSpawn());
        }
    }
