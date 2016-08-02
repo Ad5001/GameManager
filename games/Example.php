@@ -14,7 +14,17 @@ class Example extends Game {
     }
 
 
-    
+    public function onJoin(Player $player) {
+        parent::onJoin($player);
+        $this->getPlugin()->getLogger()->info($player->getName() . " joined the game " . $this->getName() . " in world " . $this->getLevel()->getName());
+    }
+
+
+    public function onQuit(Player $player) {
+        parent::onJoin($player);
+        $this->getPlugin()->getLogger()->info($player->getName() . " left the game " . $this->getName() . " in world " . $this->getLevel()->getName());
+    }
+
 
 
     public function getName() : string {

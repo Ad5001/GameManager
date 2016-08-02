@@ -56,6 +56,12 @@ abstract class Game {
    }
 
 
+   public function start() {
+       $this->gm->stopGame($this->level);
+       return true;
+   }
+
+
    public function onJoin(Player $player) {
        if($this->getLevel()->getPlayers() >= $this->getMinPlayers() and !$this->isStarted()) {
            $this->gm->startGame($this->getLevel());
@@ -73,13 +79,67 @@ abstract class Game {
    }
 
 
-   public function onInteract(\pocketmine\event\player\PlayerInteract $event) {}
+   public function onInteract(\pocketmine\event\player\PlayerInteractEvent $event) {}
+
+
+   public function onChat(\pocketmine\event\player\PlayerChatEvent $event) {}
+
+
+   public function onPlayerChat(\pocketmine\event\player\PlayerChatEvent $event) {}
+
+
+   public function onPlayerCommand(\pocketmine\event\player\PlayerCommandPreprocessEvent $event) {}
+
+
+   public function onDeath(\pocketmine\event\player\PlayerDeathEvent $event) {}
+
+
+   public function onPlayerDeath(\pocketmine\event\player\PlayerDeathEvent $event) {}
+
+
+   public function onPlayerDropItem(\pocketmine\event\player\PlayerDropItemEvent $event) {}
+
+
+   public function onDrop(\pocketmine\event\player\PlayerDropItemEvent $event) {}
+
+
+   public function onPlayerMove(\pocketmine\event\player\PlayerMoveEvent $event) {}
+
+
+   public function onMove(\pocketmine\event\player\PlayerMoveEvent $event) {}
+
+
+   public function onPlayerItemConsume(\pocketmine\event\player\PlayerItemConsumeEvent $event) {}
+
+
+   public function onItemConsume(\pocketmine\event\player\PlayerItemConsumeEvent $event) {}
+
+
+   public function onPlayerItemHeld(\pocketmine\event\player\PlayerItemHeldEvent $event) {}
+
+
+   public function onItemHeld(\pocketmine\event\player\PlayerItemHeldEvent $event) {}
+
+
+   public function onDataPacketReceive(\pocketmine\event\server\DataPacketReceiveEvent $event) {}
+
+
+   public function onDataPacketSend(\pocketmine\event\server\DataPacketSendEvent $event) {}
+
+
+   public function onServerCommand(\pocketmine\event\server\ServerCommandEvent $event) {}
 
 
    public function onBlockBreak(\pocketmine\event\block\BlockBreakEvent $event) {}
 
 
-   public function onBlockPlace(\pocketmine\event\entity\EntityDamageEvent $event) {}
+   public function onBreak(\pocketmine\event\block\BlockBreakEvent $event) {}
+
+
+   public function onBlockPlace(\pocketmine\event\entit\block\BlockPlaceEvent $event) {}
+
+
+   public function onPlace(\pocketmine\event\entit\block\BlockPlaceEvent $event) {}
 
 
    public function onEntityDamage(\pocketmine\event\entity\EntityDamageEvent $event) {}
