@@ -2,7 +2,7 @@
 # Welcome to GameManager config.
 # Here you can configure how does game signs looks.
 # 1 is line 1, 2 is line 2, 3 is line 3 and 4 is line 4. 
-# Note that {Game} MUST be included in the first line and {level} in the second one (detection).
+# Note that {Game} can be only placed in first line and {level} MUST be in the second one (detection issues :/).
 
 Game1: "§l§o[§r§l{Game}§o]"
 Game2: "-=<{level}>=-"

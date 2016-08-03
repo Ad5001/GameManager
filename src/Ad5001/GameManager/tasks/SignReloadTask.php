@@ -38,7 +38,7 @@ class SignReloadTask extends PluginTask {
                            }
                            $t->setText($texts[0], $texts[1], $texts[2], $texts[3]);
                        }
-                       if(str_ireplace("{game}", $class->getName(), $this->cfg->get("Game1")) == $t->getText()[0]) {
+                       /*if(str_ireplace("{game}", $class->getName(), $this->cfg->get("Game1")) == $t->getText()[0]) {*/
                            $lvlex = explode("{level}", $this->cfg->get("Game2"));
                            $lvl = str_ireplace($lvlex[0], "", $t->getText()[1]); 
                            $lvl = str_ireplace($lvlex[1], "", $lvl);
@@ -57,7 +57,7 @@ class SignReloadTask extends PluginTask {
                                    $t->setText($t->getText()[0], $t->getText()[1], $l3, $t4);
                                }
                            }
-                       }
+                    //    }
                    }
                }
            }
