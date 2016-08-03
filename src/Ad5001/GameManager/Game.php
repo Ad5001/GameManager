@@ -35,7 +35,7 @@ abstract class Game {
 
 
    public function getLevel() {
-       return $this->main;
+       return $this->level;
    }
 
 
@@ -68,6 +68,7 @@ abstract class Game {
        }
        if($this->getLevel()->getPlayers() <= $this->getMaxPlayers() and !$this->isStarted()) {
            $player->teleport($this->getServer()->getDefaultLevel()->getDefaultSpawn());
+           $player->sendMessage("Too many players already in the game !");
        }
    }
 
@@ -76,6 +77,11 @@ abstract class Game {
        if($this->getLevel()->getPlayers() <= $this->getMinPlayers()) {
            $this->gm->stopGame($this->getLevel());
        }
+   }
+
+
+   public function getLogger() {
+       return $this->getPlugin()->getLogger();
    }
 
 

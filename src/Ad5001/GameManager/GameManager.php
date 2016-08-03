@@ -67,6 +67,8 @@ class GameManager {
             } else {
                 $this->main->getLogger()->warn("No game found with name $game");
             }
+        } else {
+            $this->main->getLogger()->warn("{$level->getName()} is already registered.");
         }
     }
 
@@ -88,15 +90,17 @@ class GameManager {
 
 
     public function restoreBackup(Level $level) {
-        $this->rrmdir($level->getFolderName());
-        $this->copydir($this->server->getFilePath() . "worldsBackups/{$level->getName()}", $level->getFolderName());
+        $this->rrmdir($this->server->getFilePath() . "worlds/" . $level->getFolderName());
+        @mkdir($this->server->getFilePath() . "worlds/{$level->getFolderName()}");
+        $this->copydir($this->server->getFilePath() . "worldsBackups/{$level->getName()}", $this->server->getFilePath() . "worlds/" . $level->getFolderName());
     }
 
 
 
    public function backup(Level $level) {
         $this->rrmdir($this->server->getFilePath() . "worldsBackups/{$level->getName()}");
-        $this->copydir($level->getFolderName(), $this->server->getFilePath() . "worldsBackup/{$level->getName()}");
+        @mkdir($this->server->getFilePath() . "worldsBackup/{$level->getName()}");
+        $this->copydir($this->server->getFilePath() . "worlds/" . $level->getFolderName(), $this->server->getFilePath() . "worldsBackup/{$level->getName()}");
    } 
 
 
@@ -105,7 +109,7 @@ class GameManager {
             $objects = scandir($dir);
             foreach ($objects as $object) {
                 if ($object != "." && $object != "..") {
-                    if (filetype($dir."/".$object) == "dir") rrmdir($dir."/".$object); else unlink($dir."/".$object);
+                    if (filetype($dir."/".$object) == "dir") $this->rrmdir($dir."/".$object); else unlink($dir."/".$object);
                 }
             }
             reset($objects);
@@ -124,7 +128,7 @@ class GameManager {
             }
             $Entry = $source . '/' . $entry; 
             if (is_dir($Entry)) {
-                copydir($Entry, $target . '/' . $entry);
+                $this->copydir($Entry, $target . '/' . $entry);
                 continue;
             }
             copy($Entry, $target . '/' . $entry);

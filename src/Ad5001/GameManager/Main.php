@@ -10,7 +10,6 @@ use pocketmine\level\Level;
 use pocketmine\block\Block;
 use pocketmine\event\entity\EntityLevelChangeEvent;
 use pocketmine\Player;
-use Ad5001\GameManager\GameManager;
 use Ad5001\GameManager\tasks\SignReloadTask;
 
 
@@ -27,9 +26,12 @@ class Main extends PluginBase implements Listener {
         @mkdir($this->getDataFolder() . "games");
         $this->manager = new GameManager($this);
         $this->getServer()->getScheduler()->scheduleRepeatingTask(new SignReloadTask($this), 5);
-        foreach(array_diff_key($this->getConfig()->getAll(), ["Game1" => "", "Game2" => "", "InGame3" => "", "InGame4" => "", "GameWait3" => "", "GameWait4" => ""]) as $worldname => $gamename) {
-            if($this->getServer()->getLevelByName($worldname) instanceof Level) {
-                $this->manager->registerLevel($this->getServer()->getLevelByName($worldname), $gamename);
+        foreach(array_diff_key($this->getConfig()->getAll(), ["Game1" => $this->getConfig()->get("Game1"), "Game2" => $this->getConfig()->get("Game2"), "InGame3" => $this->getConfig()->get("InGame3"), "InGame4" => $this->getConfig()->get("InGame4"), "GameWait3" => $this->getConfig()->get("InGame4"), "GameWait4" => $this->getConfig()->get("InGame4")]) as $worldname => $gamename) {
+            $lvl = $this->getLevelByName($worldname);
+            // $this->getLogger()->info(get_class($lvl));
+            if($lvl instanceof Level) {
+                // $this->getLogger()->info("Registering $worldname");
+                $this->manager->registerLevel($lvl, $gamename);
             }
         }
    }
@@ -69,6 +71,16 @@ class Main extends PluginBase implements Listener {
     }
 
 
+    public function getLevelByName(string $name) {
+        foreach($this->getServer()->getLevels() as $level) {
+            if($level->getName() == $name) {
+                return $level;
+            }
+        }
+        return null;
+    }
+
+
 ############################
 #                                                    #
 #           Events for games             #
@@ -102,12 +114,20 @@ public function onInteract(PlayerInteractEvent $event) {
    }
 
 
+
+   public function onLevelLoad(\pocketmine\event\level\LevelLoadEvent $event) {
+       if($this->getConfig()->get($event->getLevel()->getName()) !== null) {
+           $this->manager->registerLevel($event->getLevel(), $this->getConfig()->get($event->getLevel()->getName()));
+       }
+   }
+
+
    public function onEntityLevelChange(EntityLevelChangeEvent $event) {
        if(isset($this->manager->getLevels()[$event->getOrigin()->getName()]) and $event->getEntity() instanceof Player) {
-           $this->gameManager->getLevels()[$event->getOrigin()->getName()]->onQuit($event->getPlayer());
+           $this->manager->getLevels()[$event->getOrigin()->getName()]->onQuit($event->getEntity());
        }
        if(isset($this->manager->getLevels()[$event->getTarget()->getName()]) and $event->getEntity() instanceof Player) {
-           $this->gameManager->getLevels()[$event->getTarget()->getName()]->onJoin($event->getPlayer());
+           $this->manager->getLevels()[$event->getTarget()->getName()]->onJoin($event->getEntity());
        }
    }
 
@@ -204,7 +224,7 @@ public function onInteract(PlayerInteractEvent $event) {
    }
 
 
-   public function onServerCommand(\pocketmine\event\server\DataPacketReceiveEvent $event) {
+   public function onServerCommand(\pocketmine\event\server\ServerCommandEvent $event) {
        foreach($this->manager->getLevels() as $lvl => $class) {
            $class->onServerCommand($event);
        }
@@ -218,7 +238,7 @@ public function onInteract(PlayerInteractEvent $event) {
 
    public function onPlayerQuit(\pocketmine\event\player\PlayerQuitEvent $event) {
        if(isset($this->manager->getLevels()[$event->getPlayer()->getLevel()->getName()])) {
-           $this->manager->getLevels()[$event->getPlayer()->getLevel()->getName()]->onQuit($player);
+           $this->manager->getLevels()[$event->getPlayer()->getLevel()->getName()]->onQuit($event->getPlayer());
        }
    }
 }

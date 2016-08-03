@@ -30,7 +30,7 @@ class SignReloadTask extends PluginTask {
                if($t instanceof \pocketmine\tile\Sign) {
                 //    echo "Sign.";
                    foreach($this->gameManager->getLevels() as $name => $class) {
-                       echo $class->getLevel()->getName();
+                    //    echo $class->getLevel()->getName();
                        if($t->getText()[0] == "[GAME]" and $class->getLevel()->getName() == $t->getText()[1]) {
                            $texts = $t->getText();
                            foreach($texts as $key => $text) {
@@ -42,8 +42,10 @@ class SignReloadTask extends PluginTask {
                            $lvlex = explode("{level}", $this->cfg->get("Game2"));
                            $lvl = str_ireplace($lvlex[0], "", $t->getText()[1]); 
                            $lvl = str_ireplace($lvlex[1], "", $lvl);
+                           $lvl = $this->main->getServer()->getLevelByName($lvl);
+                        //    $this->main->getLogger()->info($name . " == " . $lvl . " . Game: " . $t->getText()[0]);
                            if($name == $lvl) {
-                               if($this->gm->getLevels()[$lvl->getName()]->isStarted()) {
+                               if($this->gameManager->getLevels()[$lvl->getName()]->isStarted()) {
                                    $l3 = str_ireplace("{players}", count($lvl->getPlayers()), $this->cfg->get("InGame3"));
                                    $l3 = str_ireplace("{max}", $class->getMaxPlayers(), $l3);
                                    $l4 = str_ireplace("{players}", count($lvl->getPlayers()), $this->cfg->get("InGame4"));
