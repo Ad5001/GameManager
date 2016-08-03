@@ -136,10 +136,10 @@ abstract class Game {
    public function onBreak(\pocketmine\event\block\BlockBreakEvent $event) {}
 
 
-   public function onBlockPlace(\pocketmine\event\entit\block\BlockPlaceEvent $event) {}
+   public function onBlockPlace(\pocketmine\event\block\BlockPlaceEvent $event) {}
 
 
-   public function onPlace(\pocketmine\event\entit\block\BlockPlaceEvent $event) {}
+   public function onPlace(\pocketmine\event\block\BlockPlaceEvent $event) {}
 
 
    public function onEntityDamage(\pocketmine\event\entity\EntityDamageEvent $event) {}

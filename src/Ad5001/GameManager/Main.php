@@ -167,7 +167,7 @@ public function onInteract(PlayerInteractEvent $event) {
    }
 
 
-   public function onBlockBreak(\pocketmine\event\player\PlayerBreakEvent $event) {
+   public function onBlockBreak(\pocketmine\event\block\BlockBreakEvent $event) {
        if(isset($this->manager->getLevels()[$event->getPlayer()->getLevel()->getName()])) {
            $this->manager->getLevels()[$event->getPlayer()->getLevel()->getName()]->onBlockBreak($event);
            $this->manager->getLevels()[$event->getPlayer()->getLevel()->getName()]->onBreak($event);
@@ -175,7 +175,7 @@ public function onInteract(PlayerInteractEvent $event) {
    }
 
 
-   public function onBlockPlace(\pocketmine\event\player\PlayerPlaceEvent $event) {
+   public function onBlockPlace(\pocketmine\event\block\BlockPlaceEvent $event) {
        if(isset($this->manager->getLevels()[$event->getPlayer()->getLevel()->getName()])) {
            $this->manager->getLevels()[$event->getPlayer()->getLevel()->getName()]->onBlockPlace($event);
            $this->manager->getLevels()[$event->getPlayer()->getLevel()->getName()]->onPlace($event);
@@ -207,6 +207,18 @@ public function onInteract(PlayerInteractEvent $event) {
    public function onServerCommand(\pocketmine\event\server\DataPacketReceiveEvent $event) {
        foreach($this->manager->getLevels() as $lvl => $class) {
            $class->onServerCommand($event);
+       }
+   }
+
+   public function onPlayerJoin(\pocketmine\event\player\PlayerJoinEvent $event) {
+       if(isset($this->manager->getLevels()[$event->getPlayer()->getLevel()->getName()])) {
+           $this->manager->getLevels()[$event->getPlayer()->getLevel()->getName()]->onJoin($player);
+       }
+   }
+
+   public function onPlayerQuit(\pocketmine\event\player\PlayerQuitEvent $event) {
+       if(isset($this->manager->getLevels()[$event->getPlayer()->getLevel()->getName()])) {
+           $this->manager->getLevels()[$event->getPlayer()->getLevel()->getName()]->onQuit($player);
        }
    }
 }

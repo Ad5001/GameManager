@@ -88,15 +88,15 @@ class GameManager {
 
 
     public function restoreBackup(Level $level) {
-        $this->rrmdir($this->server->getFilePath() . "worlds/{$level->getName()}");
-        $this->copydir($this->server->getFilePath() . "worldsBackups/{$level->getName()}", $this->server->getFilePath() . "worlds/{$level->getName()}");
+        $this->rrmdir($level->getFolderName());
+        $this->copydir($this->server->getFilePath() . "worldsBackups/{$level->getName()}", $level->getFolderName());
     }
 
 
 
    public function backup(Level $level) {
         $this->rrmdir($this->server->getFilePath() . "worldsBackups/{$level->getName()}");
-        $this->copydir($this->server->getFilePath() . "worlds/{$level->getName()}", $this->server->getFilePath() . "worldsBackup/{$level->getName()}");
+        $this->copydir($level->getFolderName(), $this->server->getFilePath() . "worldsBackup/{$level->getName()}");
    } 
 
 
