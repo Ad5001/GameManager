@@ -162,6 +162,9 @@ abstract class Game {
    }
 
 
+   public function onCommand(\pocketmine\command\CommandSender $sender, \pocketmine\command\Command $cmd, $label, array $args) {}
+
+
 
    abstract public function getName() : string;
 
@@ -174,6 +177,14 @@ abstract class Game {
 
    public function getDataFolder() {
        return $this->main->getDataFolder() . "games/$this->name";
+   }
+
+
+   public function registerCommand(string $cmd, string $desc, string $usage, array $aliases, string $perm = "gamemanager.command.use") {
+       if(!isset($this->main->cmds[$cmd])) {
+           $this->main->cmds[$cmd] = new GameCommand($this->main, $cmd, $desc, $usage, $aliases, $this->gm->getGames()[$this->getName()], $perm);
+           $this->getServer()->getCommandMap()->register($cmd, $this->main->cmds[$cmds]);
+       }
    }
 
 

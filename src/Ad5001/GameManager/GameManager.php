@@ -5,8 +5,6 @@ use pocketmine\Server;
 use pocketmine\Player;
 use pocketmine\level\Level;
 
-use Ad5001\GameManager\Main;
-
 
 
 class GameManager {
@@ -30,8 +28,8 @@ class GameManager {
             if(!is_dir($this->main->getDataFolder() . "/games/" . $file)) {
                 require($this->main->getDataFolder() . "/games/" . $file);
                 $classn = $this->main->getClasses(file_get_contents($this->main->getDataFolder() . "/games/" . $file));
-                $this->games[explode(".php", $file)[0]] = $classn;
-                @mkdir($this->main->getDataFolder() . "games/" . explode(".php", $file)[0]);
+                $this->games[explode("\\", $classn)[count(explode("\\", $classn)) - 1]] = $classn;
+                @mkdir($this->main->getDataFolder() . "games/" . explode("\\", $classn)[count(explode("\\", $classn)) - 1]);
             }
         }
     }

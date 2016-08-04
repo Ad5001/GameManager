@@ -49,8 +49,43 @@ class Main extends PluginBase implements Listener {
 
     public function onCommand(CommandSender $sender, Command $cmd, $label, array $args){
         switch($cmd->getName()){
-            case "default":
+            case "games":
+            if(!isset($args[0])) {
+                $games = [];
+                foreach($this->manager->getGames() as $g) {
+                    array_push($games, explode("\\", $g)[count(explode("\\", $g)) - 1]);
+                }
+                $sender->sendMessage("§l§o[§r§lGameManager§o]§r Current existings games: " . implode(", ", $games) . ". \nUse /games <game_name> to get all the levels of a game.");
+            } else {
+                $sender->sendMessage("§l§o[§r§lGameManager§o]§r Current levels running $args[0]:");
+                foreach($this->manager->getLevels() as $levelname => $game) {
+                    if(strtolower($game->getName()) == strtolower($args[0])) {
+                        $p = 0;
+                        $s = 0;
+                        foreach($game->getLevel()->getPlayers() as $pl) {
+                            if($this->getServer()->getPluginManager()->getPlugin("SpectatorPlus") !== null) {
+                                if($this->getServer()->getPluginManager()->getPlugin("SpectatorPlus")->isSpectator($pl)) {
+                                    array_push($s, $pl);
+                                } else {
+                                    array_push($p, $pl); 
+                                }
+                            } else {
+                                if($pl->isSpectator()) {
+                                    array_push($s, $pl);
+                                } else {
+                                    array_push($p, $pl); 
+                                }
+                            }
+                        }
+                        $sender->sendMessage("§l§o[§r§lGameManager§o]§r§a " . $levelname . "    Is started: " . $game->isStarted() . "    Players: " . count($p) . "    Spectators: " . count($s));
+                    }
+                }
+            }
+            return true;
             break;
+        }
+        if(isset($this->cmds[$cmd->getName()])) {
+            $this->cmds[$cmd->getName()]->onCommand($sender, $cmd, $label, $args);
         }
      return false;
     }
