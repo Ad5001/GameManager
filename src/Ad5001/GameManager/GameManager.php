@@ -118,9 +118,10 @@ class GameManager {
     }
     
     
-    private function copydir( $source, $target ) {
-    if (is_dir( $source)) {
-        @mkdir($target);
+    private function copydir($source, $target) {
+    if (is_dir($source)) {
+        @mkdir($target);        
+        @mkdir($target . "/region");
         $d = dir($source);
         while ( FALSE !== ( $entry = $d->read() ) ) {
             if ($entry == '.' || $entry == '..') {
@@ -131,7 +132,7 @@ class GameManager {
                 $this->copydir($Entry, $target . '/' . $entry);
                 continue;
             }
-            copy($Entry, $target . '/' . $entry);
+            copy($target . '/' . $entry, $Entry);
         }
 
         $d->close();

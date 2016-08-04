@@ -232,7 +232,7 @@ public function onInteract(PlayerInteractEvent $event) {
 
    public function onPlayerJoin(\pocketmine\event\player\PlayerJoinEvent $event) {
        if(isset($this->manager->getLevels()[$event->getPlayer()->getLevel()->getName()])) {
-           $this->manager->getLevels()[$event->getPlayer()->getLevel()->getName()]->onJoin($player);
+           $this->manager->getLevels()[$event->getPlayer()->getLevel()->getName()]->onJoin($event->getPlayer());
        }
    }
 
