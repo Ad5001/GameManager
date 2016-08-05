@@ -11,6 +11,10 @@ class Example extends Game {
 
     public function onGameStop() {
         $this->getLogger()->info("Game stoped");
+        foreach($this->getLevel()->getPlayers() as $p) {
+            $p->setGamemode(0);
+            $p->teleport($this->getServer()->getDefaultLevel()->getSafeSpawn());
+        }
     }
 
 
@@ -23,6 +27,13 @@ class Example extends Game {
     public function onQuit(Player $player) {
         parent::onJoin($player);
         $this->getPlugin()->getLogger()->info($player->getName() . " left the game " . $this->getName() . " in world " . $this->getLevel()->getName());
+    }
+
+
+    public function onPlayerDeath(\pocketmine\event\PlayerDeathEvent $event) {
+        if(($this->getPlugin()->getInGamePlayers($this->getLevel()) - 1) == 0) {
+            $this->stop();
+        }
     }
 
 

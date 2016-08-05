@@ -30,12 +30,14 @@ class SignReloadTask extends PluginTask {
                if($t instanceof \pocketmine\tile\Sign) {
                 //    echo "Sign.";
                    foreach($this->gameManager->getLevels() as $name => $class) {
-                    //    echo $class->getLevel()->getName();
-                       if($t->getText()[0] == "[GAME]" and $class->getLevel()->getName() == $t->getText()[1]) {
+                    //    echo PHP_EOL . strtolower($t->getText()[0]) . " == " . strtolower("[GAME]") . " and " . strtolower($class->getLevel()->getName()) . " == " . strtolower($t->getText()[1]);
+                       if(strtolower($t->getText()[0]) == strtolower("[GAME]") and strtolower($class->getLevel()->getName()) == strtolower($t->getText()[1])) {
+                        //    echo "Found\n";
                            $texts = $t->getText();
-                           foreach($texts as $key => $text) {
-                               $texts[$key] = str_ireplace("{players}", count($class->getLevel()->getPlayers()), str_ireplace("{max}", $class->getMaxPlayers(), str_ireplace("{game}", $class->getName(), str_ireplace("{level}", $class->getLevel()->getName(), $text))));
-                           }
+                           $texts[0] = str_ireplace("{players}", count($this->main->getInGamePlayers($class->getLevel())), str_ireplace("{max}", $class->getMaxPlayers(), str_ireplace("{game}", $class->getName(), str_ireplace("{level}", $class->getLevel()->getName(), $this->cfg->get("Game1")))));
+                           $texts[1] = str_ireplace("{players}", count($this->main->getInGamePlayers($class->getLevel())), str_ireplace("{max}", $class->getMaxPlayers(), str_ireplace("{game}", $class->getName(), str_ireplace("{level}", $class->getLevel()->getName(), $this->cfg->get("Game2")))));
+                           $texts[2] = str_ireplace("{players}", count($this->main->getInGamePlayers($class->getLevel())), str_ireplace("{max}", $class->getMaxPlayers(), str_ireplace("{game}", $class->getName(), str_ireplace("{level}", $class->getLevel()->getName(), $this->cfg->get("GameWait3")))));
+                           $texts[3] = str_ireplace("{players}", count($this->main->getInGamePlayers($class->getLevel())), str_ireplace("{max}", $class->getMaxPlayers(), str_ireplace("{game}", $class->getName(), str_ireplace("{level}", $class->getLevel()->getName(), $this->cfg->get("GameWait4")))));
                            $t->setText($texts[0], $texts[1], $texts[2], $texts[3]);
                        }
                        /*if(str_ireplace("{game}", $class->getName(), $this->cfg->get("Game1")) == $t->getText()[0]) {*/

@@ -63,10 +63,10 @@ abstract class Game {
 
 
    public function onJoin(Player $player) {
-       if($this->getLevel()->getPlayers() >= $this->getMinPlayers() and !$this->isStarted()) {
+       if($this->main->getInGamePlayers($this->getLevel()) >= $this->getMinPlayers() and !$this->isStarted()) {
            $this->gm->startGame($this->getLevel());
        }
-       if($this->getLevel()->getPlayers() <= $this->getMaxPlayers() and !$this->isStarted()) {
+       if($this->main->getInGamePlayers($this->getLevel())<= $this->getMaxPlayers() and !$this->isStarted()) {
            $player->teleport($this->getServer()->getDefaultLevel()->getDefaultSpawn());
            $player->sendMessage("Too many players already in the game !");
        }

@@ -60,24 +60,9 @@ class Main extends PluginBase implements Listener {
                 $sender->sendMessage("§l§o[§r§lGameManager§o]§r Current levels running $args[0]:");
                 foreach($this->manager->getLevels() as $levelname => $game) {
                     if(strtolower($game->getName()) == strtolower($args[0])) {
-                        $p = 0;
-                        $s = 0;
-                        foreach($game->getLevel()->getPlayers() as $pl) {
-                            if($this->getServer()->getPluginManager()->getPlugin("SpectatorPlus") !== null) {
-                                if($this->getServer()->getPluginManager()->getPlugin("SpectatorPlus")->isSpectator($pl)) {
-                                    array_push($s, $pl);
-                                } else {
-                                    array_push($p, $pl); 
-                                }
-                            } else {
-                                if($pl->isSpectator()) {
-                                    array_push($s, $pl);
-                                } else {
-                                    array_push($p, $pl); 
-                                }
-                            }
-                        }
-                        $sender->sendMessage("§l§o[§r§lGameManager§o]§r§a " . $levelname . "    Is started: " . $game->isStarted() . "    Players: " . count($p) . "    Spectators: " . count($s));
+                        $p = $this->getInGamePlayers($game->getLevel());
+                        $s = $this->getSpectators($game->getLevel());
+                        $sender->sendMessage("§l§o[§r§lGameManager§o]§r§a " . $levelname . "    Is started: " . $game->isStarted() . "    Players: " . $p . "    Spectators: " . $s);
                     }
                 }
             }
@@ -88,6 +73,38 @@ class Main extends PluginBase implements Listener {
             $this->cmds[$cmd->getName()]->onCommand($sender, $cmd, $label, $args);
         }
      return false;
+    }
+
+    public function getInGamePlayers(Level $level) {
+        $p = 0;
+        foreach($level->getPlayers() as $pl) {
+                            if($this->getServer()->getPluginManager()->getPlugin("SpectatorPlus") !== null) {
+                                if(!$this->getServer()->getPluginManager()->getPlugin("SpectatorPlus")->isSpectator($pl)) {
+                                    array_push($p, $pl); 
+                                }
+                            } else {
+                                if(!$pl->isSpectator()) {
+                                    array_push($p, $pl); 
+                                }
+                            }
+        }
+        return count($p);
+    }
+
+
+    public function getSpectators(Level $level) {
+        $s = 0;
+        foreach($level->getPlayers() as $pl) {
+                            if($this->getServer()->getPluginManager()->getPlugin("SpectatorPlus") !== null) {
+                                if($this->getServer()->getPluginManager()->getPlugin("SpectatorPlus")->isSpectator($pl)) {
+                                    array_push($s, $pl);
+                                }
+                            } else {
+                                if($pl->isSpectator()) {
+                                    array_push($s, $pl);
+                                }
+                            }
+        }
     }
 
 
@@ -132,12 +149,12 @@ public function onInteract(PlayerInteractEvent $event) {
                            $lvlex = explode("{level}", $this->getConfig()->get("Game2"));
                            $lvl = str_ireplace($lvlex[0], "", $t->getText()[1]); 
                            $lvl = str_ireplace($lvlex[1], "", $lvl);
-                           if($name == $lvl) {
-                               if($this->manager->getLevels()[$lvl->getName()]->isStarted()) {
-                                   $event->getPlayer()->teleport($lvl->getDefaultSpawn());
+                           if($class->getLevel()->getName() == $lvl) {
+                               if($this->manager->getLevels()[$lvl]->isStarted()) {
+                                   $event->getPlayer()->teleport($class->getLevel()->getSafeSpawn());
                                    $event->getPlayer()->setGamemode(3);
                                } else {
-                                   $event->getPlayer()->teleport($lvl->getDefaultSpawn());
+                                   $event->getPlayer()->teleport($class->getLevel()->getSafeSpawn());
                                }
                            }
                   }

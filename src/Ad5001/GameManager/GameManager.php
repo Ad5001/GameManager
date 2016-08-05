@@ -130,7 +130,7 @@ class GameManager {
                 $this->copydir($Entry, $target . '/' . $entry);
                 continue;
             }
-            copy($target . '/' . $entry, $Entry);
+            @copy($Entry, $target . '/' . $entry);
         }
 
         $d->close();
