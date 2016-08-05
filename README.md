@@ -3,9 +3,9 @@ Make minigames easilier !
 Gamemanager is a plugin that allow minigame writing a lot easilier with his easy api, disigned for per world minigame !    
 I made this for me at start but feel free to use it to write your own minigame !     
 ### How to make a game:     
-To make a game base, create a new file called "<YOUR_GAME_NAME>.php". Inside it, add a 
+To make a game base, create a new file called "<**YOUR_GAME_NAME**>.php". Inside it, add a 
 
-``    
+```php    
 <?php
 
 use Ad5001\GameManager\Game;
@@ -27,7 +27,8 @@ public function getMaxPlayers() : int { // Return the max of the players
 return <NUMBER OF PLAYERS MAX>;
 }
   
-}   ``    
+}
+```    
 This is the basic class.    
 Methods that you can add to the class (optionals):    
 
