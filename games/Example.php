@@ -30,7 +30,8 @@ class Example extends Game {
     }
 
 
-    public function onPlayerDeath(\pocketmine\event\PlayerDeathEvent $event) {
+    public function onPlayerDeath(\pocketmine\event\player\PlayerDeathEvent $event) {
+        $event->getPlayer()->setGamemode(3);
         if(($this->getPlugin()->getInGamePlayers($this->getLevel()) - 1) == 0) {
             $this->stop();
         }
