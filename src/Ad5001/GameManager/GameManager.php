@@ -25,9 +25,9 @@ class GameManager {
         $this->levels = [];
         $this->startedgames = [];
         foreach ($files as $file) {
-            if(!is_dir($this->main->getDataFolder() . "/games/" . $file)) {
-                require($this->main->getDataFolder() . "/games/" . $file);
-                $classn = $this->main->getClasses(file_get_contents($this->main->getDataFolder() . "/games/" . $file));
+            if(!is_dir($this->main->getDataFolder() . "games/" . $file)) {
+                require($this->main->getDataFolder() . "games/" . $file);
+                $classn = $this->main->getClasses(file_get_contents($this->main->getDataFolder() . "games/" . $file));
                 $this->games[explode("\\", $classn)[count(explode("\\", $classn)) - 1]] = $classn;
                 @mkdir($this->main->getDataFolder() . "games/" . explode("\\", $classn)[count(explode("\\", $classn)) - 1]);
             }
@@ -119,7 +119,7 @@ class GameManager {
     private function copydir($source, $target) {
     if (is_dir($source)) {
         @mkdir($target);        
-        @mkdir($target . "/region");
+        @mkdir($target . "region");
         $d = dir($source);
         while ( FALSE !== ( $entry = $d->read() ) ) {
             if ($entry == '.' || $entry == '..') {
