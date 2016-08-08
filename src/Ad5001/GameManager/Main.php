@@ -56,6 +56,28 @@ class Main extends PluginBase implements Listener {
                     array_push($games, explode("\\", $g)[count(explode("\\", $g)) - 1]);
                 }
                 $sender->sendMessage("§l§o[§r§lGameManager§o]§r Current existings games: " . implode(", ", $games) . ". \nUse /games <game_name> to get all the levels of a game.");
+            } elseif($args[0] == "join" or $args[0] == "j") {
+                if(isset($args[1])) {
+                    if(isset($this->manager->getLevels()[$args[1]])) {
+                        $sender->sendMessage("§l§o§b[§r§a§l{$this->manager->getLevels()[$args[1]]->getName()}§o§b]§r Joining game {$this->manager->getLevels()[$args[1]]->getName()} in world {$this->manager->getLevels()[$args[1]]->getLevel()->getName()}");
+                        $sender->teleport($this->manager->getLevels()[$args[1]]->getLevel()->getSafeSpawn());
+
+                    }
+                }
+            } elseif($args[0] == "quickjoin" or $args[0] == "qj") {
+                if(isset($args[1])) {
+                    if(isset($this->manager->getLevels()[$args[1]])) {
+                        foreach($this->manager->getLevels() as $levelname => $game) {
+                            if(strtolower($game->getName()) == strtolower($args[1]) and !$game->isStarted()) {
+                                $p = $this->getInGamePlayers($game->getLevel());
+                                if($p < $game->getMaxPlayers()) {
+                                    $sender->sendMessage("§l§o§b[§r§a§l{$game->getName()}§o§b]§r Joining game {$game->getName()} in world {$game->getLevel()->getName()}");
+                                    $sender->teleport($game->getLevel()->getSafeSpawn());
+                                }
+                            }
+                        }
+                    }
+                }
             } else {
                 $sender->sendMessage("§l§o[§r§lGameManager§o]§r Current levels running $args[0]:");
                 foreach($this->manager->getLevels() as $levelname => $game) {
@@ -80,11 +102,11 @@ class Main extends PluginBase implements Listener {
         foreach($level->getPlayers() as $pl) {
                             if($this->getServer()->getPluginManager()->getPlugin("SpectatorPlus") !== null) {
                                 if(!$this->getServer()->getPluginManager()->getPlugin("SpectatorPlus")->isSpectator($pl)) {
-                                    array_push($p, $pl); 
+                                    $p++;
                                 }
                             } else {
                                 if(!$pl->isSpectator()) {
-                                    array_push($p, $pl); 
+                                    $p++; 
                                 }
                             }
         }
@@ -97,11 +119,11 @@ class Main extends PluginBase implements Listener {
         foreach($level->getPlayers() as $pl) {
                             if($this->getServer()->getPluginManager()->getPlugin("SpectatorPlus") !== null) {
                                 if($this->getServer()->getPluginManager()->getPlugin("SpectatorPlus")->isSpectator($pl)) {
-                                    array_push($s, $pl);
+                                    $s++;
                                 }
                             } else {
                                 if($pl->isSpectator()) {
-                                    array_push($s, $pl);
+                                    $s++;
                                 }
                             }
         }
@@ -258,6 +280,20 @@ public function onInteract(PlayerInteractEvent $event) {
    public function onEntityDamage(\pocketmine\event\entity\EntityDamageEvent $event) {
        if(isset($this->manager->getLevels()[$event->getEntity()->getLevel()->getName()])) {
            $this->manager->getLevels()[$event->getEntity()->getLevel()->getName()]->onEntityDamage($event);
+       }
+   }
+
+
+   public function onProjectileLauch(\pocketmine\event\entity\ProjectileLauchEvent $event) {
+       if(isset($this->manager->getLevels()[$event->getEntity()->getLevel()->getName()])) {
+           $this->manager->getLevels()[$event->getEntity()->getLevel()->getName()]->onProjectileLauch($event);
+       }
+   }
+
+
+   public function onProjectileHit(\pocketmine\event\entity\ProjectileHitEvent $event) {
+       if(isset($this->manager->getLevels()[$event->getEntity()->getLevel()->getName()])) {
+           $this->manager->getLevels()[$event->getEntity()->getLevel()->getName()]->onProjectileHit($event);
        }
    }
 

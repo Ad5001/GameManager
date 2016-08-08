@@ -4,6 +4,18 @@ author:  Ad5001
 version: 1.0
 api: [2.0.0]
 main: Ad5001\GameManager\Main
-commands: []
-permissions: []
+commands: 
+    games:
+      description: "Main GameManager command"
+      usage: "/games [game]"
+      permission: gamemanager.true
+permissions:
+    gamemanager.true:
+      default: true
+    gamemanager.op:
+      default: op
+    gamemanager.false:
+      default: false
+    gamemanager.notop:
+      default: !op
 ...

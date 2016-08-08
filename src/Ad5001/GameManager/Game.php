@@ -147,14 +147,23 @@ abstract class Game {
    public function onEntityDamage(\pocketmine\event\entity\EntityDamageEvent $event) {}
 
 
+   public function onProjectileLauch(\pocketmine\event\entity\ProjectileLauchEvent $event) {}
+
+
+   public function onProjectileHit(\pocketmine\event\entity\ProjectileHitEvent $event) {}
+
+
    public function getConfig() {
-       return new Config($this->main->getDataFolder() . "games/$this->name");
+       if(!isset($this->cfg)) {
+           $this->cfg = new Config($this->main->getDataFolder() . "games/$this->name/config.yml");
+       }
+       return $this->cfg;
    }
 
 
    public function saveDefaultConfig() {
        @mkdir($this->main->getDataFolder() . "games/" . $this->name);
-       file_put_contents($this->main->getDataFolder() . "games/$this->name", "");
+       file_put_contents($this->main->getDataFolder() . "games/$this->name/config.yml", "");
    }
 
 
@@ -172,11 +181,50 @@ abstract class Game {
    }
 
 
-   public function registerCommand(string $cmd, string $desc, string $usage, array $aliases, string $perm = "gamemanager.command.use") {
+   public function registerCommand(string $cmd, string $desc, string $usage, array $aliases = [], string $perm = "gamemanager.command.use") {
        if(!isset($this->main->cmds[$cmd])) {
-           $this->main->cmds[$cmd] = new GameCommand($this->main, $cmd, $desc, $usage, $aliases, $this->gm->getGames()[$this->getName()], $perm);
-           $this->getServer()->getCommandMap()->register($cmd, $this->main->cmds[$cmds]);
+           $this->main->cmds[$cmd] = new GameCommand($this->main, $cmd, $desc, $usage, $aliases, $this, $perm);
+           $this->getServer()->getCommandMap()->register($cmd, $this->main->cmds[$cmd]);
        }
+   }
+
+
+   public function getServer() {
+       return $this->getPlugin()->getServer();
+   }
+
+
+   public function getName() : string {
+       return explode(get_class($this))[count(explode(get_class($this))) - 1];
+   }
+
+
+   public function broadcastMessage(string $message) {
+       foreach($this->getLevel()->getPlayers() as $p) {
+           $p->sendMessage($message);
+       }
+   }
+
+
+   public function getInGamePlayers() {
+       $p = [];
+       foreach($this->getLevel()->getPlayers() as $pl) {
+           if(!$pl->isSpecator()) {
+               $p[] = $pl;
+           }
+       }
+       return $p;
+   }
+
+
+   public function getSpectators() {
+       $p = [];
+       foreach($this->getLevel()->getPlayers() as $pl) {
+           if($pl->isSpecator()) {
+               $p[] = $pl;
+           }
+       }
+       return $p;
    }
 
 
