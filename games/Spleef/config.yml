@@ -1,0 +1,22 @@
+# Welcome to Spleef config !
+# Configure here the max stuffs about the spleef game.
+# Example:
+#world:
+#  maxplayers: 8
+#  minplayers: 2
+#  SnowLevels: [8, 13]
+#  center: [x, z]
+#  SnowBlock: 80
+#  WinCommand: give {winner} diamond
+#  # This is optional but if you want super customisation...
+#  # WinPHPCode: "$this->getServer()->broadcastMessage( . ' won the game !');"
+
+spleef:
+ maxplayers: 8
+ minplayers: 2
+ SnowLevels: [8, 13]
+ center: [0, 0]
+ SnowBlock: 80
+ WinCommand: "give {winner} diamond"
+ # This is optional but if you want super customisation...
+ WinPHPCode: "$this->getServer()->broadcastMessage($this->winner->getName() . ' won the game !');"
