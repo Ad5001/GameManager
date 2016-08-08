@@ -18,4 +18,7 @@ class GameCommand extends Command implements PluginIdentifiableCommand {
     public function execute(CommandSender $sender, $label, array $args) {
         return $this->game->onCommand($sender, $this, $label, $args);
     }
+    public function getPlugin() {
+        return $this->main;
+    }
 }

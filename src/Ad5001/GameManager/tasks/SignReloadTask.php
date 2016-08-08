@@ -46,13 +46,13 @@ class SignReloadTask extends PluginTask {
                                    $l3 = str_ireplace("{max}", $class->getMaxPlayers(), $l3);
                                    $l4 = str_ireplace("{players}", count($lvl->getPlayers()), $this->cfg->get("InGame4"));
                                    $l4 = str_ireplace("{max}", $class->getMaxPlayers(), $l4);
-                                   $t->setText($t->getText()[0], $t->getText()[1], $l3, $t4);
+                                   $t->setText($t->getText()[0], $t->getText()[1], $l3, $l4);
                                } else {
                                    $l3 = str_ireplace("{players}", count($lvl->getPlayers()), $this->cfg->get("GameWait3"));
                                    $l3 = str_ireplace("{max}", $class->getMaxPlayers(), $l3);
                                    $l4 = str_ireplace("{players}", count($lvl->getPlayers()), $this->cfg->get("GameWait4"));
                                    $l4 = str_ireplace("{max}", $class->getMaxPlayers(), $l4);
-                                   $t->setText($t->getText()[0], $t->getText()[1], $l3, $t4);
+                                   $t->setText($t->getText()[0], $t->getText()[1], $l3, $l4);
                                }
                            }
                    }
