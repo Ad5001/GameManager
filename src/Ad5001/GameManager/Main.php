@@ -284,9 +284,9 @@ public function onInteract(PlayerInteractEvent $event) {
    }
 
 
-   public function onProjectileLauch(\pocketmine\event\entity\ProjectileLauchEvent $event) {
+   public function onProjectileLaunch(\pocketmine\event\entity\ProjectileLaunchEvent $event) {
        if(isset($this->manager->getLevels()[$event->getEntity()->getLevel()->getName()])) {
-           $this->manager->getLevels()[$event->getEntity()->getLevel()->getName()]->onProjectileLauch($event);
+           $this->manager->getLevels()[$event->getEntity()->getLevel()->getName()]->onProjectileLaunch($event);
        }
    }
 

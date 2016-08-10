@@ -63,10 +63,10 @@ class GameManager {
             if(isset($this->games[$game])) {
                 $this->levels[$level->getName()] = new $this->games[$game]($game, $level);
             } else {
-                $this->main->getLogger()->warn("No game found with name $game");
+                $this->main->getLogger()->warning("No game found with name $game");
             }
         } else {
-            $this->main->getLogger()->warn("{$level->getName()} is already registered.");
+            $this->main->getLogger()->warning("{$level->getName()} is already registered.");
         }
     }
 

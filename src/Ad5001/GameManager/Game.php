@@ -147,7 +147,7 @@ abstract class Game {
    public function onEntityDamage(\pocketmine\event\entity\EntityDamageEvent $event) {}
 
 
-   public function onProjectileLauch(\pocketmine\event\entity\ProjectileLauchEvent $event) {}
+   public function onProjectileLaunch(\pocketmine\event\entity\ProjectileLauchEvent $event) {}
 
 
    public function onProjectileHit(\pocketmine\event\entity\ProjectileHitEvent $event) {}
