@@ -1,4 +1,11 @@
 <?php
+/*
+This software is distributed under the BoxOfDevs Public General License 1.1
+Some names could come from the Werewolfs of Thiercelieux by (c) Lui-même Co Ltd 2016
+@author Ad5001
+@link projects.ad5001.ga/GameManager
+@version 1.0
+*/
 use Ad5001\GameManager\Game;
 use pocketmine\Player;
 use pocketmine\item\Item;
@@ -36,7 +43,7 @@ class LoupGarou extends Game {
         $this->current = null;
         $this->killed = null;
         $this->maire = null;
-        $this->potions = ["life" => true, "death" => true];
+        $this->potions = ["life" => true, "death" => true, "speed" => true, "slow" => true, "regen" => true, "poison" => true];
         $this->getServer()->getScheduler()->scheduleRepeatingTask(new FirstDayTask($this), 20);
     }
 
@@ -194,10 +201,28 @@ class LoupGarou extends Game {
                     case "sorcière":
                     if($event->getDamager() instanceof Player) {
                       if($this->getRole($event->getDamager()) == "Sorcière" and $this->getRole($event->getEntity()) !== "Sorcière") {
-                          if($event->getDamager()->getInventory()->getItemInHand()->getId() == 373 and $event->getDamager()->getInventory()->getItemInHand()->getDamage() == 23) {
-                              $this->killed2 = $event->getEntity();
-                              $this->potions["death"] = false;
-                              $this->task->turn = 390;
+                          if($event->getDamager()->getInventory()->getItemInHand()->getId() == 373) {
+                              if($event->getDamager()->getInventory()->getItemInHand()->getDamage() == 23) {
+                                  $this->killed2 = $event->getEntity();
+                                  $this->potions["death"] = false;
+                                  $this->task->turn = 390;
+                              } elseif($event->getDamager()->getInventory()->getItemInHand()->getDamage() == 14) {
+                                  $this->speed = $event->getEntity();
+                                  $this->potions["speed"] = false;
+                                  $this->task->turn = 390;
+                              } elseif($event->getDamager()->getInventory()->getItemInHand()->getDamage() == 17) {
+                                  $this->slow = $event->getEntity();
+                                  $this->potions["slowness"] = false;
+                                  $this->task->turn = 390;
+                              } elseif($event->getDamager()->getInventory()->getItemInHand()->getDamage() == 28) {
+                                  $this->regen = $event->getEntity();
+                                  $this->potions["regen"] = false;
+                                  $this->task->turn = 390;
+                              } elseif($event->getDamager()->getInventory()->getItemInHand()->getDamage() == 25) {
+                                  $this->poison = $event->getEntity();
+                                  $this->potions["poison"] = false;
+                                  $this->task->turn = 390;
+                              }
                           }
                       }
                     }
@@ -779,12 +804,43 @@ class DayTask extends \pocketmine\scheduler\PluginTask {
             if(isset($this->main->Sorcière)) {
                 $this->main->broadcastMessage("La sorcière se réveille !");
                 $this->main->Sorcière->removeEffectByName("BLINDNESS");
+                $r = rand(0, 40);
+                if($r <= 3) {
+                    if($r == 0) {
+                        $this->main->potions["speed"] = true;
+                        $this->main->Sorcière->sendMessage("Vous avez concocté une potion de speed !");
+                    }
+                    if($r == 1) {
+                        $this->main->potions["slowness"] = true;
+                        $this->main->Sorcière->sendMessage("Vous avez concocté une potion de lenteur !");
+                    }
+                    if($r == 2) {
+                        $this->main->potions["regen"] = true;
+                        $this->main->Sorcière->sendMessage("Vous avez concocté une potion de regeneration !");
+                    }
+                    if($r == 3) {
+                        $this->main->potions["poison"] = true;
+                        $this->main->Sorcière->sendMessage("Vous avez concocté une potion de poison !");
+                    }
+                }
                 $this->main->Sorcière->sendMessage($this->main->killed->getName() . " a été tué cette nuit ! Souaitez vous le resuciter (boire la potion de vie), ou tuer une autre personne (la taper avec la potion de mort). Faites attention, ces potions n'ont qu'un seul usage dans la partie.");
-                if($this->potions["life"]) {
+                if($this->main->potions["life"]) {
                     $this->main->Sorcière->getInventory()->addItem(Item::get(Item::POTION, 21, 1)->setCompoundTag(\pocketmine\nbt\NBT::parseJSON("{display:{Name:'Potion de vie\\n \\n \\n \\n'},Unbreakable:1}")));
                 }
-                if($this->potions["death"]) {
+                if($this->main->potions["death"]) {
                     $this->main->Sorcière->getInventory()->addItem(Item::get(Item::POTION, 23, 1)->setCompoundTag(\pocketmine\nbt\NBT::parseJSON("{display:{Name:'Potion de mort\\n \\n \\n \\n'},Unbreakable:1}")));
+                }
+                if($this->main->potions["speed"]) {
+                    $this->main->Sorcière->getInventory()->addItem(Item::get(Item::POTION, 23, 1)->setCompoundTag(\pocketmine\nbt\NBT::parseJSON("{display:{Name:'Potion de speed\\n \\n \\n \\n'},Unbreakable:1}")));
+                }
+                if($this->main->potions["slowness"]) {
+                    $this->main->Sorcière->getInventory()->addItem(Item::get(Item::POTION, 23, 1)->setCompoundTag(\pocketmine\nbt\NBT::parseJSON("{display:{Name:'Potion de lenteur\\n \\n \\n \\n'},Unbreakable:1}")));
+                }
+                if($this->main->potions["poison"]) {
+                    $this->main->Sorcière->getInventory()->addItem(Item::get(Item::POTION, 23, 1)->setCompoundTag(\pocketmine\nbt\NBT::parseJSON("{display:{Name:'Potion de poison\\n \\n \\n \\n'},Unbreakable:1}")));
+                }
+                if($this->main->potions["regen"]) {
+                    $this->main->Sorcière->getInventory()->addItem(Item::get(Item::POTION, 23, 1)->setCompoundTag(\pocketmine\nbt\NBT::parseJSON("{display:{Name:'Potion de regen\\n \\n \\n \\n'},Unbreakable:1}")));
                 }
                 $this->main->current = "sorcière";
             } else {
@@ -896,6 +952,34 @@ class DayTask extends \pocketmine\scheduler\PluginTask {
             }
             $this->turn = 0;
             break;
+        }
+        if(isset($this->speed)) {
+            $e = \pocketmine\entity\Effect::getEffect(1);
+            $e->setAmplifier(2);
+            $e->setVisible(false);
+            $e->setDuration(40);
+            $this->speed->addEffect($e);
+        }
+        if(isset($this->slow)) {
+            $e = \pocketmine\entity\Effect::getEffect(2);
+            $e->setAmplifier(2);
+            $e->setVisible(false);
+            $e->setDuration(40);
+            $this->slow->addEffect($e);
+        }
+        if(isset($this->poison)) {
+            $e = \pocketmine\entity\Effect::getEffectByName("POISON");
+            $e->setAmplifier(2);
+            $e->setVisible(false);
+            $e->setDuration(40);
+            $this->poison->addEffect($e);
+        }
+        if(isset($this->regen)) {
+            $e = \pocketmine\entity\Effect::getEffect(10);
+            $e->setAmplifier(2);
+            $e->setVisible(false);
+            $e->setDuration(40);
+            $this->regen->addEffect($e);
         }
         $this->turn++;
     }
