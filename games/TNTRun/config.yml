@@ -1,0 +1,11 @@
+# Welcome to TNTRun config !
+# Configure here the max stuffs about the TNTRun game.
+# Example:
+#world:
+#  maxplayers: 8
+#  minplayers: 2
+#  center: [x, z]
+#  TNTBlock: 80
+#  WinCommand: give {winner} diamond
+#  # This is optional but if you want super customisation... 
+# WinPHPCode: "$this->getServer()->broadcastMessage($this->winner . ' won the game !');"

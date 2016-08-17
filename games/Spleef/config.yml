@@ -4,7 +4,6 @@
 #world:
 #  maxplayers: 8
 #  minplayers: 2
-#  SnowLevels: [8, 13]
 #  center: [x, z]
 #  SnowBlock: 80
 #  WinCommand: give {winner} diamond
@@ -14,7 +13,6 @@
 spleef:
  maxplayers: 8
  minplayers: 2
- SnowLevels: [8, 13]
  center: [0, 0]
  SnowBlock: 80
  WinCommand: "give {winner} diamond"
