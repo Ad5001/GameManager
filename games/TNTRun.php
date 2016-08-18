@@ -30,7 +30,7 @@ class TNTRun extends Game {
         if(!file_exists($this->getDataFolder() . "/config.yml")) {
             file_put_contents($this->getDataFolder()."/config.yml", $text);
         }
-        if($this->getConfig()->get($this->getLevel()->getName()) == null) {
+        if(!is_array($this->getConfig()->get($this->getLevel()->getName()))) {
             $this->getConfig()->set($this->getLevel()->getName(), ["minplayers" => 2, "maxplayers" => 8, "center" =>[0, 0], "TNTBlock" => 13, "WinCommand" => "give {winner} diamond"]);
         }
         $this->doubleJump = [];
@@ -229,7 +229,7 @@ class TNTRun extends Game {
 
     public function onBreak(\pocketmine\event\block\BlockBreakEvent $event) {
         $event->setCancelled();
-        if($event->getPlayer()->isOp() and $player->isCreative() and !$this->isStarted()) {
+        if($event->getPlayer()->isOp() and $event->getPlayer()->isCreative() and !$this->isStarted()) {
             $event->setCancelled(false);
         }
     }
@@ -249,7 +249,8 @@ class TNTRun extends Game {
                     case "start":
                     if(isset($this->gm->getLevels()[$sender->getLevel()->getName()])) {
                         if(!$this->gm->getLevels()[$sender->getLevel()->getName()]->isStarted() and $this->gm->getLevels()[$sender->getLevel()->getName()]->getName() == "TNTRun") {
-                            $this->start();
+                            $h = $this->getServer()->getScheduler()->scheduleRepeatingTask($t = new TNTRunStartTask($this), 20);
+                            $t->setHandler($h);
                         }
                     }
                     break;
