@@ -1,7 +1,7 @@
 # GameManager
-Make minigames easilier !
-Gamemanager is a plugin that allow minigame writing a lot easilier with his easy api, disigned for per world minigame !    
-I made this for me at start but feel free to use it to write your own minigame !     
+Make minigames easier!
+Gamemanager is a plugin that makes writing a minigame much easier with its easy api, which is conveniently designed for per world minigames!    
+I made this for me in the beginning but feel free to use it to write your own minigame!     
 ### How to make a game:     
 To make a game base, create a new file called "<**YOUR_GAME_NAME**>.php". Inside it, add a 
 
