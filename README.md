@@ -1,3 +1,4 @@
+## This repository was moved to [git.ad5001.eu](https://git.ad5001.eu/Ad5001/GameManager)
 # GameManager
 Make minigames easier!
 Gamemanager is a plugin that makes writing a minigame much easier with its easy api, which is conveniently designed for per world minigames!    
